@@ -3,3 +3,7 @@
 [BootStrap](https://v3.bootcss.com/components/)
 
 [jQuery](https://code.jquery.com/)
+
+[GitHub创建OAuth App](https://code.jquery.com/)
+
+[GitHub登录授权步骤](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/)
