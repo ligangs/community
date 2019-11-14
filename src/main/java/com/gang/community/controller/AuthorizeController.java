@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 
@@ -23,20 +24,22 @@ public class AuthorizeController {
     @Value("${github.Client_secret}")
     private String client_secret;
     @Value("${github.Redirect_uri}")
-    private String redircet_uri;
+    private String redirect_uri;
 
     @GetMapping("/callback")
     public String callback(@PathParam("code") String code,
-                           @PathParam("state") String state) {
+                           @PathParam("state") String state,
+                           HttpServletRequest request) {
         String post = null;
         String access_token = null;
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setState(state);
         accessTokenDTO.setClient_id(client_id);
-        accessTokenDTO.setRedirect_uri(redircet_uri);
+        accessTokenDTO.setRedirect_uri(redirect_uri);
         accessTokenDTO.setClient_secret(client_secret);
 
+        GitHubUser gitHubUser = null;
         try {
             //post=access_token=31acd25e400b583288e293cba945c4f5a3ae355d&scope=user&token_type=bearer
             post = gitHubProvide.post("https://github.com/login/oauth/access_token", JSON.toJSONString(accessTokenDTO));
@@ -46,12 +49,21 @@ public class AuthorizeController {
 
             //发送get请求https://api.github.com/user，得到用户信息api
             String userAPI = gitHubProvide.run("https://api.github.com/user?" + post.toString());
+            //System.out.println(post);
             //将返回json 数据封装成对象
-            GitHubUser gitHubUser = JSON.parseObject(userAPI, GitHubUser.class);
-            System.out.println(gitHubUser);
+            gitHubUser = JSON.parseObject(userAPI, GitHubUser.class);
         } catch (IOException e) {
         } finally {
-            return "index";
+            if (gitHubUser != null) {
+                //登录成功
+                //将的到的用户信息存入Session
+                request.getSession().setAttribute("user", gitHubUser);
+                return "redirect:/";
+            } else {
+                //登录失败
+                return "redirect:/";
+            }
+
         }
     }
 }
