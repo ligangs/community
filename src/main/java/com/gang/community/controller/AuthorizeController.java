@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class AuthorizeController {
 
     @Autowired
     private GitHubProvide gitHubProvide;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -35,7 +38,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@PathParam("code") String code,
                            @PathParam("state") String state,
-                           HttpServletRequest request) {
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
         String post = null;
         String access_token = null;
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
@@ -62,7 +66,6 @@ public class AuthorizeController {
         } finally {
             if (gitHubUser != null) {
                 //登录成功
-                //将的到的用户信息存入Session
                 User user = new User();
                 user.setAccount_id(String.valueOf(gitHubUser.getId()));
                 user.setName(gitHubUser.getName());
@@ -70,8 +73,14 @@ public class AuthorizeController {
                 user.setGmt_create(System.currentTimeMillis());
                 user.setGmt_modified(user.getGmt_create());
 
+                Cookie tokenCookie = new Cookie("token", user.getToken());
+                //可以通过设置Cookie的MaxAge，设置cookie的有效时间，默认有效时间为一次会话
+                //tokenCookie.setMaxAge(60*1);
+                response.addCookie(tokenCookie);
+
                 userMapper.insertUser(user);
-                request.getSession().setAttribute("user", gitHubUser);
+                //将的到的用户信息存入Session
+                request.getSession().setAttribute("user", user);
                 return "redirect:/";
             } else {
                 //登录失败
