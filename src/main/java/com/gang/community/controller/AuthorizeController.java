@@ -3,6 +3,8 @@ package com.gang.community.controller;
 import com.alibaba.fastjson.JSON;
 import com.gang.community.dto.AccessTokenDTO;
 import com.gang.community.dto.GitHubUser;
+import com.gang.community.mapper.UserMapper;
+import com.gang.community.model.User;
 import com.gang.community.provide.GitHubProvide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,12 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
 
     @Autowired
     private GitHubProvide gitHubProvide;
+    @Autowired
+    private UserMapper userMapper;
+
 
     @Value("${github.Client_id}")
     private String client_id;
@@ -57,6 +63,14 @@ public class AuthorizeController {
             if (gitHubUser != null) {
                 //登录成功
                 //将的到的用户信息存入Session
+                User user = new User();
+                user.setAccount_id(String.valueOf(gitHubUser.getId()));
+                user.setName(gitHubUser.getName());
+                user.setToken(UUID.randomUUID().toString());
+                user.setGmt_create(System.currentTimeMillis());
+                user.setGmt_modified(user.getGmt_create());
+
+                userMapper.insertUser(user);
                 request.getSession().setAttribute("user", gitHubUser);
                 return "redirect:/";
             } else {

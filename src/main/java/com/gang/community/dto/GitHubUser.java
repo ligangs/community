@@ -34,6 +34,10 @@ public class GitHubUser {
         this.id = id;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "GitHubUser{" +
