@@ -64,7 +64,7 @@ public class AuthorizeController {
             gitHubUser = JSON.parseObject(userAPI, GitHubUser.class);
         } catch (IOException e) {
         } finally {
-            if (gitHubUser != null) {
+            if (gitHubUser != null&&gitHubUser.getId()!=null) {
                 //登录成功
                 User user = new User();
                 user.setAccount_id(String.valueOf(gitHubUser.getId()));
