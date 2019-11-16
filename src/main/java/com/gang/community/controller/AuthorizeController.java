@@ -67,12 +67,12 @@ public class AuthorizeController {
             if (gitHubUser != null&&gitHubUser.getId()!=null) {
                 //登录成功
                 User user = new User();
-                user.setAccount_id(String.valueOf(gitHubUser.getId()));
+                user.setAccountId(String.valueOf(gitHubUser.getId()));
                 user.setName(gitHubUser.getName());
                 user.setToken(UUID.randomUUID().toString());
-                user.setGmt_create(System.currentTimeMillis());
-                user.setGmt_modified(user.getGmt_create());
-
+                user.setGmtCreate(System.currentTimeMillis());
+                user.setGmtModified(user.getGmtCreate());
+                user.setAvatarUrl(gitHubUser.getAvatarUrl());
                 Cookie tokenCookie = new Cookie("token", user.getToken());
                 //可以通过设置Cookie的MaxAge，设置cookie的有效时间，默认有效时间为一次会话
                 //tokenCookie.setMaxAge(60*1);
