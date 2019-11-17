@@ -3,10 +3,23 @@ body{
 }
 .main{
     margin: 30px;
+    padding-bottom: 20px;
     background-color: white;
 }
 .btn-publish{
     float:right;
     margin-top: 8px;
     margin-bottom: 15px;
+}
+.text-description{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+.media-object{
+    height: 38px;
+    width: 38px;
+}
+.content-left{
+    border-right: 2px solid #efefef;
 }
