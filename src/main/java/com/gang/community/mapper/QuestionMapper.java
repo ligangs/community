@@ -3,6 +3,7 @@ package com.gang.community.mapper;
 import com.gang.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -15,4 +16,10 @@ public interface QuestionMapper {
 
     @Select("select * from question order by gmt_create desc")
     List<Question> findAll();
+
+    @Select("select * from question order by gmt_create desc limit #{currentPage},#{pageSize} ")
+    List<Question> getPageQuestions(@Param("currentPage") int currentPage, @Param("pageSize") int pageSize);
+
+    @Select("select count(1) from question")
+    int getCount();
 }

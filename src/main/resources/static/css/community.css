@@ -23,3 +23,9 @@ body{
 .content-left{
     border-right: 2px solid #efefef;
 }
+.page-header{
+    margin:0;
+}
+label{
+    margin-top: 10px;
+}

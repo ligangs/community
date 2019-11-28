@@ -57,8 +57,9 @@
 </nav>
 <div class="container-fluid main">
     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 content-left">
-        <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 提问</h2>
-        <hr>
+        <div class="page-header">
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 提问</h2>
+        </div>
         <form action="/publish" method="post">
             <div class="form-group">
                 <label for="title">问题标题（简单扼要）：</label>
@@ -79,7 +80,8 @@
                 <div class="row">
                     <div>
 
-                        <div class="col-lg-11 col-md-12 col-sm-12 col-xs-12 alert alert-danger center-block" role="alert" th:if="${error!=null}" th:text="${error} "></div>
+                        <div class="col-lg-11 col-md-12 col-sm-12 col-xs-12 alert alert-danger center-block"
+                             role="alert" th:if="${error!=null}" th:text="${error} "></div>
                     </div>
                     <div col-lg-1 col-md-12 col-sm-12 col-xs-12>
                         <button type="submit" class="btn btn-success btn-publish center-block">发布</button>
