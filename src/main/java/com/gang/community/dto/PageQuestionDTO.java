@@ -13,4 +13,5 @@ public class PageQuestionDTO {
     private int pageSize;//每页的记录数
     private int totalSize; //总的记录数
     private List<Integer> pages;//要显示的页码
+    private Boolean flag=true;//标记是否有数据,默认true
 }

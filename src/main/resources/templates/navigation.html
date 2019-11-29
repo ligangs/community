@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="copy">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">提问社区</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="问题搜索">
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li>
+                        <a href="https://github.com/login/oauth/authorize?client_id=2b28008b97c0ba4323e9&redirect=http://localhost:8080/callback&state=1&scope=user"
+                           th:if="${session.user==null}">登录</a>
+                    </li>
+                    <li>
+                        <a href="/publish" th:if="${session.user!=null}">提问</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false" th:if="${session.user!=null}">
+                            <span th:text="${session.user.name}"> </span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/profile/questions">我的问题</a></li>
+                            <li><a href="/profile/replies">消息中心</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
