@@ -5,6 +5,7 @@ import com.gang.community.dto.QuestionDTO;
 import com.gang.community.mapper.QuestionMapper;
 import com.gang.community.mapper.UserMapper;
 import com.gang.community.model.Question;
+import com.gang.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,52 +40,57 @@ public class QuestionService {
 
         //得到总记录数
         int totalSize=questionMapper.getCount();
-        //计算总页数
-        int totalPage=totalSize%pageSize==0?totalSize/pageSize:totalSize/pageSize+1;
-        //处理当前页，上下页，会导致当前页为0 或大于总页数
-        if(currentPage<1)
-            currentPage=1;
-        if(currentPage>totalPage)
-            currentPage=totalPage;
-        //设置当前页
-        pageQuestionDTO.setCurrentPage(currentPage);
+        if (totalSize == 0) {
+            pageQuestionDTO.setFlag(false);
+        }
+        if (pageQuestionDTO.getFlag()){
+            //计算总页数
+            int totalPage=totalSize%pageSize==0?totalSize/pageSize:totalSize/pageSize+1;
+            //处理当前页，上下页，会导致当前页为0 或大于总页数
+            if(currentPage<1)
+                currentPage=1;
+            if(currentPage>totalPage)
+                currentPage=totalPage;
+            //设置当前页
+            pageQuestionDTO.setCurrentPage(currentPage);
 
-        //得到当前页需要显示的问题
-        List<Question> pageQuestions = questionMapper.getPageQuestions((currentPage-1)*pageSize, pageSize);
-        //组装问题和作者，便于显示
-        List<QuestionDTO> questionDTOS = new ArrayList<>();
-        for (Question question : pageQuestions) {
-            QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question,questionDTO);
-            questionDTO.setUser(userMapper.findUserById(question.getCreator()));
-            questionDTOS.add(questionDTO);
-        }
-        pageQuestionDTO.setPageQuestionDTOS(questionDTOS);
+            //得到当前页需要显示的问题
+            List<Question> pageQuestions = questionMapper.getPageQuestions((currentPage-1)*pageSize, pageSize);
+            //组装问题和作者，便于显示
+            List<QuestionDTO> questionDTOS = new ArrayList<>();
+            for (Question question : pageQuestions) {
+                QuestionDTO questionDTO = new QuestionDTO();
+                BeanUtils.copyProperties(question,questionDTO);
+                questionDTO.setUser(userMapper.findUserById(question.getCreator()));
+                questionDTOS.add(questionDTO);
+            }
+            pageQuestionDTO.setPageQuestionDTOS(questionDTOS);
 
-        //计算出需要显示的页码，开始和结束
-        int start;
-        int end;
-        if (totalPage < pageSize) {
-            start = 1;
-            end = totalPage;
-        } else {
-            start=currentPage-2;
-            end=currentPage+2;
-            if(start<1){
-                start=1;
-                end=pageSize;
+            //计算出需要显示的页码，开始和结束
+            int start;
+            int end;
+            if (totalPage < pageSize) {
+                start = 1;
+                end = totalPage;
+            } else {
+                start=currentPage-2;
+                end=currentPage+2;
+                if(start<1){
+                    start=1;
+                    end=pageSize;
+                }
+                if (end > totalPage) {
+                    end=totalPage;
+                    start=end-pageSize+1;
+                }
             }
-            if (end > totalPage) {
-                end=totalPage;
-                start=end-pageSize+1;
+            List<Integer> pages = new ArrayList<>();
+            //将页码放入页码数组
+            for (int i = start; i <= end; i++) {
+                pages.add(i);
             }
+            pageQuestionDTO.setPages(pages);
         }
-        List<Integer> pages = new ArrayList<>();
-        //将页码放入页码数组
-        for (int i = start; i <= end; i++) {
-            pages.add(i);
-        }
-        pageQuestionDTO.setPages(pages);
         return pageQuestionDTO;
     }
 
@@ -150,7 +156,15 @@ public class QuestionService {
             }
             pageQuestionDTO.setPages(pages);
         }
-
         return pageQuestionDTO;
+    }
+
+    public QuestionDTO getQuestionDTOById(Integer id) {
+        QuestionDTO questionDTO=new QuestionDTO();
+        Question question=questionMapper.getQuestionById(id);
+        BeanUtils.copyProperties(question, questionDTO);
+        User user = userMapper.findUserById(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
     }
 }

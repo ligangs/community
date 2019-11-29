@@ -29,7 +29,12 @@ body{
 label{
     margin-top: 10px;
 }
-
 .profile .section{
     margin-top: 15px;
+}
+.edt{
+    margin-top: 10px;
+}
+.edt a{
+    color: #999;
 }

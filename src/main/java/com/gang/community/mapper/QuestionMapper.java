@@ -28,4 +28,7 @@ public interface QuestionMapper {
 
     @Select("select * from question where creator=#{userId} order by gmt_create desc limit #{offset},#{pageSize}")
     List<Question> getPageQuestionsByUserId(@Param("offset") Integer offset,@Param("pageSize") Integer pageSize, @Param("userId") Integer userId);
+
+    @Select("select * from question where id=#{id}")
+    Question getQuestionById(@Param("id") Integer id);
 }

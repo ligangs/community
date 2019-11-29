@@ -1,7 +1,6 @@
 package com.gang.community.controller;
 
 import com.gang.community.mapper.QuestionMapper;
-import com.gang.community.mapper.UserMapper;
 import com.gang.community.model.Question;
 import com.gang.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class PublishController {
 
-    @Autowired
-    private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
 
@@ -31,33 +27,20 @@ public class PublishController {
     public String pushQuestion(@RequestParam(value = "title", required = false) String title,
                                @RequestParam(value = "description", required = false) String description,
                                @RequestParam(value = "tag", required = false) String tag,
-                               Model model,
-                               HttpServletRequest request) {
+                               HttpServletRequest request,
+                               Model model) {
         //用于回显所填信息
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
 
         //判断是否登录
-        User user=null;
-        Cookie[] cookies = request.getCookies();
-        if(cookies==null) {
-            model.addAttribute("error", "您还未登录，请先登录后再发表问题吧~");
-            return "publish";
-        }
-        for(Cookie cookie:cookies) {
-            if (cookie.getName().equals("token")) {
-                user = userMapper.findUserByToken(cookie.getValue());
-            }
-        }
+        User user=(User)request.getSession().getAttribute("user");
         //用户未登录
         if(user==null) {
             model.addAttribute("error", "您还未登录，请先登录后再发表问题吧~");
             return "publish";
         }
-        //用户已登录，将用户信息写入session
-        request.getSession().setAttribute("user",user);
-
 
         //判断是否有未填写完整的信息，给出错误提示
         if (title == null||title=="") {

@@ -17,14 +17,16 @@
         <div class="page-header">
             <h2><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>&nbsp;发现</h2>
         </div>
-        <div class="media" th:each="questionDTO:${pageQuestionDTO.getPageQuestionDTOS()}">
+        <div class="media" th:each="questionDTO:${pageQuestionDTO.pageQuestionDTOS}">
             <div class="media-left">
                 <a href="#">
                     <img class="media-object img-rounded" th:src="${questionDTO.user.avatarUrl}">
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
+                <a th:href="@{'/question/'+${questionDTO.id}}">
+                    <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
+                </a>
                 <span class="text-description">
                     <span th:text="${questionDTO.description}"></span><br/>
                     <span th:text="${questionDTO.likeCount}"></span> 人关注 • <span

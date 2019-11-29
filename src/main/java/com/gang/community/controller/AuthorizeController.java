@@ -3,9 +3,9 @@ package com.gang.community.controller;
 import com.alibaba.fastjson.JSON;
 import com.gang.community.dto.AccessTokenDTO;
 import com.gang.community.dto.GitHubUser;
-import com.gang.community.mapper.UserMapper;
 import com.gang.community.model.User;
 import com.gang.community.provide.GitHubProvide;
+import com.gang.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class AuthorizeController {
     private GitHubProvide gitHubProvide;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
 
     @Value("${github.Client_id}")
@@ -73,14 +73,12 @@ public class AuthorizeController {
                 user.setGmtCreate(System.currentTimeMillis());
                 user.setGmtModified(user.getGmtCreate());
                 user.setAvatarUrl(gitHubUser.getAvatarUrl());
+                user.setBio(gitHubUser.getBio());
                 Cookie tokenCookie = new Cookie("token", user.getToken());
                 //可以通过设置Cookie的MaxAge，设置cookie的有效时间，默认有效时间为一次会话
                 //tokenCookie.setMaxAge(60*1);
                 response.addCookie(tokenCookie);
-
-                userMapper.insertUser(user);
-                //将的到的用户信息存入Session
-                request.getSession().setAttribute("user", user);
+                userService.addOrUpdate(user);
                 return "redirect:/";
             } else {
                 //登录失败
@@ -88,5 +86,14 @@ public class AuthorizeController {
             }
 
         }
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        request.getSession().removeAttribute("user");
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0);
+        response.addCookie(token);
+        return "redirect:/";
     }
 }
