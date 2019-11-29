@@ -21,34 +21,15 @@ import java.util.List;
 
 @Controller
 public class IndexController {
-
-    @Autowired
-    private UserMapper userMapper;
     @Autowired
     private QuestionService questionService;
-
     @GetMapping("/")
-    public String index(HttpServletRequest request,
-                        @RequestParam(name = "currentPage",defaultValue = "1")Integer currentPage,
+    public String index(@RequestParam(name = "currentPage",defaultValue = "1")Integer currentPage,
                         @RequestParam(name="pageSize",defaultValue = "5")Integer pageSize,
                         Model model){
         //得到问题列表，回显首页
         PageQuestionDTO pageQuestionDTO = questionService.getPageQuestion(currentPage, pageSize);
         model.addAttribute("pageQuestionDTO", pageQuestionDTO);
-
-        //判断是否登录
-        Cookie[] cookies = request.getCookies();
-        if(cookies==null)
-            return "index";
-        for(Cookie cookie:cookies) {
-            if (cookie.getName().equals("token")) {
-                User user = userMapper.findUserByToken(cookie.getValue());
-                if (user != null) {
-                    request.getSession().setAttribute("user", user);
-                    break;
-                }
-            }
-        }
         return "index";
     }
 }
