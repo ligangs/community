@@ -4,6 +4,7 @@ import com.gang.community.dto.PageQuestionDTO;
 import com.gang.community.dto.QuestionDTO;
 import com.gang.community.exception.CustomizeErrorCode;
 import com.gang.community.exception.CustomizeException;
+import com.gang.community.mapper.QuestionExtMapper;
 import com.gang.community.mapper.QuestionMapper;
 import com.gang.community.mapper.UserMapper;
 import com.gang.community.model.Question;
@@ -23,6 +24,8 @@ public class QuestionService {
     UserMapper userMapper;
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    QuestionExtMapper questionExtMapper;
 
     //得到所有问题对象的DTO，将question和user组装
     public List<QuestionDTO> getList() {
@@ -198,5 +201,10 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+    public void incView(Integer id) {
+        Question question=questionMapper.selectByPrimaryKey(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
