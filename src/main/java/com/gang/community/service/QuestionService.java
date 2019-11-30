@@ -2,6 +2,8 @@ package com.gang.community.service;
 
 import com.gang.community.dto.PageQuestionDTO;
 import com.gang.community.dto.QuestionDTO;
+import com.gang.community.exception.CustomizeErrorCode;
+import com.gang.community.exception.CustomizeException;
 import com.gang.community.mapper.QuestionMapper;
 import com.gang.community.mapper.UserMapper;
 import com.gang.community.model.Question;
@@ -170,6 +172,9 @@ public class QuestionService {
     public QuestionDTO getQuestionDTOById(Integer id) {
         QuestionDTO questionDTO=new QuestionDTO();
         Question question=questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         BeanUtils.copyProperties(question, questionDTO);
         User user =  userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
@@ -188,7 +193,10 @@ public class QuestionService {
         } else {
             //更新
             question.setGmtModified(System.currentTimeMillis());
-            questionMapper.updateByPrimaryKeySelective(question);
+            int update=questionMapper.updateByPrimaryKeySelective(question);
+            if (update!=1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
