@@ -17,3 +17,12 @@
 [Lombok官网](https://projectlombok.org)
 
 [Thymeleaf使用](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#dates)
+
+[MyBatis Generator](http://mybatis.org/generator/)
+###脚本
+```bash
+mvn flyway:migrate
+```
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
