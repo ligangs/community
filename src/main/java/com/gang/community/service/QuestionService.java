@@ -107,7 +107,7 @@ public class QuestionService {
     //组装用于显示个人所有提问的分页数据信息
     public PageQuestionDTO getPageQuestionByUserId(Integer currentPage,
                                                    Integer pageSize,
-                                                   Integer userId) {
+                                                   Long userId) {
         PageQuestionDTO pageQuestionDTO =new PageQuestionDTO();
 
         //得到总记录数
@@ -172,7 +172,7 @@ public class QuestionService {
         return pageQuestionDTO;
     }
 
-    public QuestionDTO getQuestionDTOById(Integer id) {
+    public QuestionDTO getQuestionDTOById(Long id) {
         QuestionDTO questionDTO=new QuestionDTO();
         Question question=questionMapper.selectByPrimaryKey(id);
         if (question == null) {
@@ -191,7 +191,7 @@ public class QuestionService {
             question.setLikeCount(0);
             question.setViewCount(0);
             question.setGmtCreate(System.currentTimeMillis());
-            question.setGmtModified(question.getGmtCreate());
+            question.setGmtModified(System.currentTimeMillis());
             questionMapper.insert(question);
         } else {
             //更新
@@ -202,7 +202,7 @@ public class QuestionService {
             }
         }
     }
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question=questionMapper.selectByPrimaryKey(id);
         question.setViewCount(1);
         questionExtMapper.incView(question);

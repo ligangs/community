@@ -1,6 +1,5 @@
 package com.gang.community.dto;
 
-import com.gang.community.model.Question;
 import lombok.Data;
 
 import java.util.List;

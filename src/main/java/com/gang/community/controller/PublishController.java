@@ -29,7 +29,7 @@ public class PublishController {
     public String pushQuestion(@RequestParam(value = "title", required = false) String title,
                                @RequestParam(value = "description", required = false) String description,
                                @RequestParam(value = "tag", required = false) String tag,
-                               @RequestParam(value = "id",required = false)Integer id,
+                               @RequestParam(value = "id",required = false)Long id,
                                HttpServletRequest request,
                                Model model) {
         //用于回显所填信息
@@ -69,7 +69,7 @@ public class PublishController {
     }
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name="id")Integer id,
+    public String edit(@PathVariable(name="id")Long id,
                        Model model) {
         QuestionDTO questionDTO = questionService.getQuestionDTOById(id);
         model.addAttribute("title", questionDTO.getTitle());
