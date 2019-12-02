@@ -1,6 +1,6 @@
 package com.gang.community.controller;
 
-import com.gang.community.dto.CommentDTO;
+import com.gang.community.dto.CommentCreateDTO;
 import com.gang.community.dto.ResultDTO;
 import com.gang.community.exception.CustomizeErrorCode;
 import com.gang.community.model.Comment;
@@ -23,7 +23,7 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public Object comment(@RequestBody CommentDTO commentDTO,
+    public Object comment(@RequestBody CommentCreateDTO commentCreateDTO,
                           HttpServletRequest request) {
 
         User user = (User)request.getSession().getAttribute("user");
@@ -32,9 +32,9 @@ public class CommentController {
         }
 
         Comment comment = new Comment();
-        comment.setParentId(commentDTO.getParentId());
-        comment.setComment(commentDTO.getComment());
-        comment.setType(commentDTO.getType());
+        comment.setParentId(commentCreateDTO.getParentId());
+        comment.setComment(commentCreateDTO.getComment());
+        comment.setType(commentCreateDTO.getType());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());

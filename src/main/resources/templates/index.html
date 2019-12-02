@@ -8,6 +8,15 @@
     <script src="/js/bootstrap.js"></script>
     <title>社区首页</title>
 </head>
+<script type="application/javascript">
+    window.onload=function () {
+        if (window.localStorage.getItem("isclose") == "true") {
+            window.localStorage.removeItem("isclose");
+            window.close();
+        }
+    }
+</script>
+
 <body>
 <!--引入导航条-->
 <div th:insert="~{navigation :: copy}"></div>
