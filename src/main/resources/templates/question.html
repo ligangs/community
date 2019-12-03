@@ -32,6 +32,10 @@
             </a>
         </div>
 
+        <div class="page-header">
+            <h3 th:text="${comments.size()}+个回复"></h3>
+        </div>
+
         <!--评论列表-->
         <div class="media" th:if="${comments.size()!=0}" th:each="comment:${comments}">
             <div class="media-left">
@@ -47,6 +51,10 @@
                 <span class="pull-right text-description" th:text="${#calendars.format(comment.gmtCreate,'yyyy-MM-dd ')}"></span>
                 <hr>
             </div>
+        </div>
+
+        <div class="page-header">
+            <h3> 提交回复</h3>
         </div>
 
         <div class="comment" id="comment_area">
@@ -66,7 +74,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-        <div class="page-header">
+        <div class="page-header right-creator">
             <h4>发起人</h4>
             <div class="media">
                 <div class="media-left">

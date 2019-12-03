@@ -1,6 +1,10 @@
 function post() {
     var parent_id = $("#parent_id").val();
     var comment_content = $("#comment_content").val();
+    if (!comment_content) {
+        alert("评论不能为空哦");
+        return ;
+    }
     $.ajax({
         url: "/comment",
         data: JSON.stringify({
@@ -12,7 +16,7 @@ function post() {
         contentType: "application/json",
         success: function (data) {
             if (data.code == 200) {
-                $("#comment_area").hide();
+                window.location.reload();
             } else {
                 if (data.code == 2003) {
                     var conf = confirm(data.message);
@@ -26,5 +30,5 @@ function post() {
             }
         },
         dataType: "json",
-    })
+    });
 }

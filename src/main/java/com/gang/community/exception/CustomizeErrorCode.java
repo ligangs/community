@@ -8,7 +8,7 @@ public enum  CustomizeErrorCode implements ICustomizeErrorCode{
     SYSTEM_ERROR(2004,"服务器出错啦，请换个姿势！！！" ),
     TYPE_PARAM_WRONG(2005,"评论类型错误或不存在，你真的有认真操作吗？" ),
     COMMENT_NOT_FOUND(2006,"该评论已经不存在啦，换个试试吧~" ),
-    ;
+    COMMENT_IS_EMPTY(2007,"评论的内容为不能空哦~" );
 
     @Override
     public String getMessage() {
