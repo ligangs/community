@@ -35,7 +35,6 @@
         <div class="page-header">
             <h3 th:text="${comments.size()}+个回复"></h3>
         </div>
-
         <!--评论列表-->
         <div class="media" th:if="${comments.size()!=0}" th:each="comment:${comments}">
             <div class="media-left">
@@ -47,16 +46,23 @@
                 <span th:text="${comment.user.name}"></span><br/>
                 <span th:text="${comment.comment}"></span><br/>
                 <span class="glyphicon glyphicon-thumbs-up my_ic" aria-hidden="true"><span class="badge">3</span></span>
-                <span class="glyphicon glyphicon-comment my_ic" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-comment my_ic" aria-hidden="true" th:data-id="${comment.id}" onclick="CommentCollapse(this)"><span class="badge" th:text="${comment.commentCount}"></span></span>
                 <span class="pull-right text-description" th:text="${#calendars.format(comment.gmtCreate,'yyyy-MM-dd ')}"></span>
+
+                <!--二级评论-->
+                <div class="collapse second-comment" th:id="comment_+${comment.id}">
+                    <div>
+                        <input type="text" class="form-control" placeholder="说点什么吧~" th:id="input- + ${comment.id}">
+                        <button type="button" class="btn btn-success btn-comment pull-right" onclick="comment(this)" th:data-id="${comment.id}">回复</button>
+                    </div>
+                </div>
                 <hr>
             </div>
         </div>
 
         <div class="page-header">
-            <h3> 提交回复</h3>
+            <h3> 提交回复</h3>cou
         </div>
-
         <div class="comment" id="comment_area">
             <div class="media" th:if="${session.user!=null}">
                 <div class="media-left">

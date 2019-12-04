@@ -1,7 +1,9 @@
 package com.gang.community.controller;
 
 import com.gang.community.dto.CommentCreateDTO;
+import com.gang.community.dto.CommentDTO;
 import com.gang.community.dto.ResultDTO;
+import com.gang.community.enums.CommentTypeEnum;
 import com.gang.community.exception.CustomizeErrorCode;
 import com.gang.community.model.Comment;
 import com.gang.community.model.User;
@@ -9,12 +11,10 @@ import com.gang.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class CommentController {
@@ -41,8 +41,14 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());
-        comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResultDTO comments(@PathVariable(name="id")Long id) {
+        List<CommentDTO> commentDTOS = commentService.getCommentListByType(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }

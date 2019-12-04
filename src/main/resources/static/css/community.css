@@ -59,6 +59,16 @@ label {
     margin: 10px 0;
 }
 
+.second-comment {
+    margin:10px 0 55px;
+    padding: 10px 10px 50px;
+    border:2px solid #eee;
+}
+
+.second-comment .btn-comment {
+    margin:10px 0;
+}
+
 .comment .form-control {
     margin: 10px 0;
 }
@@ -71,14 +81,18 @@ label {
     color: #999;
 }
 
+.media-body .active{
+    color: #499ef3;
+}
+
 .media-body .my_ic:hover {
     color: #499ef3;
 }
+
 .media-body .my_ic .badge {
     margin-top: -10px;
     margin-left: 2px;
     background-color: #999999;
-
 }
 
 .right-creator {

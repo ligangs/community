@@ -4,10 +4,7 @@ import com.gang.community.dto.CommentDTO;
 import com.gang.community.enums.CommentTypeEnum;
 import com.gang.community.exception.CustomizeErrorCode;
 import com.gang.community.exception.CustomizeException;
-import com.gang.community.mapper.CommentMapper;
-import com.gang.community.mapper.QuestionExtMapper;
-import com.gang.community.mapper.QuestionMapper;
-import com.gang.community.mapper.UserMapper;
+import com.gang.community.mapper.*;
 import com.gang.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,8 @@ public class CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
@@ -44,7 +43,9 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            dbComment.setCommentCount(1);
             commentMapper.insert(comment);
+            commentExtMapper.incComment(dbComment);
         } else {
             //回复问题
             Question dbQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -57,11 +58,11 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> getCommentList(Long id) {
+    public List<CommentDTO> getCommentListByType(Long id, CommentTypeEnum commentTypeEnum) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(commentTypeEnum.getType());
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 

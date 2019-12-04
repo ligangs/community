@@ -2,7 +2,7 @@ package com.gang.community.controller;
 
 import com.gang.community.dto.CommentDTO;
 import com.gang.community.dto.QuestionDTO;
-import com.gang.community.mapper.CommentMapper;
+import com.gang.community.enums.CommentTypeEnum;
 import com.gang.community.service.CommentService;
 import com.gang.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id")Long id,
                            Model model) {
         QuestionDTO questionDTO=questionService.getQuestionDTOById(id);
-        List<CommentDTO> commentDTOS=commentService.getCommentList(id);
+        List<CommentDTO> commentDTOS=commentService.getCommentListByType(id, CommentTypeEnum.QUESTION);
         questionService.incView(id);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments", commentDTOS);
