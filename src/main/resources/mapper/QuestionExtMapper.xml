@@ -2,17 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gang.community.mapper.QuestionExtMapper">
     <resultMap id="BaseResultMap" type="com.gang.community.model.Question">
-        <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="title" jdbcType="VARCHAR" property="title" />
-        <result column="tag" jdbcType="VARCHAR" property="tag" />
-        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
-        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified" />
-        <result column="creator" jdbcType="INTEGER" property="creator" />
-        <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
-        <result column="view_count" jdbcType="INTEGER" property="viewCount" />
-        <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+        <result column="creator" jdbcType="INTEGER" property="creator"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
     </resultMap>
-
     <update id="incView" parameterType="com.gang.community.model.Question">
         update question
         set view_count=  view_count + #{viewCount,jdbcType=INTEGER}
@@ -23,5 +22,10 @@
         set comment_count=  comment_count + #{commentCount,jdbcType=INTEGER}
         where id = #{id,jdbcType=INTEGER}
     </update>
-
+    <select id="getRelatedQuestionList" parameterType="com.gang.community.model.Question" resultMap="BaseResultMap">
+        select *
+        from question
+        where
+        tag REGEXP #{tag,jdbcType=INTEGER} and id != #{id,jdbcType=INTEGER}
+    </select>
 </mapper>

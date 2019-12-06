@@ -65,6 +65,10 @@ label {
     border:2px solid #eee;
 }
 
+.question-lable {
+    margin-right: 5px;
+}
+
 .second-comment .btn-comment {
     margin:10px 0;
 }

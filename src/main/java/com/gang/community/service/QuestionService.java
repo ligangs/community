@@ -65,7 +65,9 @@ public class QuestionService {
             pageQuestionDTO.setCurrentPage(currentPage);
 
             //得到当前页需要显示的问题
-            List<Question> pageQuestions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds((currentPage-1)*pageSize,pageSize));
+            QuestionExample questionExample = new QuestionExample();
+            questionExample.setOrderByClause("gmt_create desc");
+            List<Question> pageQuestions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds((currentPage-1)*pageSize,pageSize));
             //组装问题和作者，便于显示
             List<QuestionDTO> questionDTOS = new ArrayList<>();
             for (Question question : pageQuestions) {
@@ -207,4 +209,19 @@ public class QuestionService {
         question.setViewCount(1);
         questionExtMapper.incView(question);
     }
+
+    //得到相关问题列表
+    public List<Question> getRelatedQuestionList(Long id) {
+
+        Question dbQuestion = questionMapper.selectByPrimaryKey(id);
+        Question question = new Question();
+        question.setId(id);
+        //将tag字符串转变成正则表达式
+        String regexpTag = dbQuestion.getTag().replace(',', '|');
+        question.setTag(regexpTag);
+        List<Question> relatedQuestions =questionExtMapper.getRelatedQuestionList(question);
+
+        return relatedQuestions;
+    }
+
 }
