@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/community.css">
     <script src="/js/jquery-3.4.1.js"></script>
     <script src="/js/bootstrap.js"></script>
+    <script src="/js/community.js"></script>
     <title>提问</title>
 </head>
 <body>
@@ -19,25 +20,48 @@
         </div>
         <form action="/publish" method="post">
             <input type="hidden" name="id" th:value="${id}">
+
+            <!--标题-->
             <div class="form-group">
                 <label for="title">问题标题（简单扼要）：</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="问题的标题....."
+                <input type="text" class="form-control" id="title" name="title" placeholder="问题的标题....." autocomplete="off"
                        th:value="${title}">
             </div>
+
+            <!--问题描述-->
             <div class="form-group">
                 <label for="description">问题补充，必填（请参照右侧提示）：</label>
                 <textarea class="form-control" rows="15" id="description" name="description"
                           th:text="${description}"></textarea>
             </div>
 
+            <!--标签-->
             <div class="form-group">
                 <label for="tag">添加标签：</label>
-                <input type="text" class="form-control" id="tag" name="tag" placeholder="添加标签，以，隔开" th:value="${tag}">
+                <input type="text" class="form-control" id="tag" name="tag" placeholder="添加标签，以，隔开" autocomplete="off" onclick="displayTag()"
+                       th:value="${tag}" >
+                <!--展示标签-->
+                <div class="publish-tag-section" id="tag-section">
+                    <ul class="nav nav-tabs" role="tablist" >
+                        <li role="presentation" th:each="selecetCatogory:${tags}">
+                            <a th:href="${'#'+selecetCatogory.categoryName}"  role="tab" data-toggle="tab" th:text="${selecetCatogory.categoryName}"></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel " class="tab-pane publish-tag" th:each="selecetCatogory:${tags}" th:id="${selecetCatogory.categoryName}">
+                            <span class="label label-info question-label sp-publish" th:each="selectTag:${selecetCatogory.tags}">
+                                <span class="glyphicon glyphicon-tags"></span>
+                                <span onclick="selectTag(this)" th:data-tag="${selectTag}" th:text="${selectTag}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!--错误提示和发布按钮-->
             <div class="container-fluid">
                 <div class="row">
                     <div>
-
                         <div class="col-lg-11 col-md-12 col-sm-12 col-xs-12 alert alert-danger center-block"
                              role="alert" th:if="${error!=null}" th:text="${error} "></div>
                     </div>

@@ -65,8 +65,21 @@ label {
     border:2px solid #eee;
 }
 
-.question-lable {
+.question-label {
     margin-right: 5px;
+}
+
+.sp-publish {
+    cursor:pointer;
+}
+
+.publish-tag-section {
+    display: none;
+    margin-top: 10px;
+}
+
+.publish-tag {
+    margin-top: 10px;
 }
 
 .second-comment .btn-comment {

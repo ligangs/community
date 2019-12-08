@@ -28,7 +28,7 @@
             <hr/>
             <h4 th:text="${question.description}"></h4>
             <hr/>
-            <span class="label label-info question-lable" th:each="tag:${question.tag.split(',')}">
+            <span class="label label-info question-label" th:each="tag:${question.tag.split(',')}">
                 <span class="glyphicon glyphicon-tags"></span>
                 <span th:text="${tag}"></span>
             </span>

@@ -1,8 +1,16 @@
+//评论
 function post() {
     var parent_id = $("#parent_id").val();
     var comment_content = $("#comment_content").val();
     comment2target(parent_id, 1, comment_content);
 }
+//回复
+function comment(e) {
+    var targetId=e.getAttribute("data-id");
+    var content = $("#input-" + targetId).val();
+    comment2target(targetId, 2, content);
+}
+//保存评论或回复
 function comment2target(targetId,type,content) {
     if (!content) {
         alert("评论不能为空哦");
@@ -36,12 +44,7 @@ function comment2target(targetId,type,content) {
     });
 }
 
-function comment(e) {
-    var targetId=e.getAttribute("data-id");
-    var content = $("#input-" + targetId).val();
-    comment2target(targetId, 2, content);
-}
-
+//展示/隐藏二级评论
 function CommentCollapse(e) {
     var id=e.getAttribute("data-id");
     var comments_status = e.getAttribute("comments_status");
@@ -73,6 +76,25 @@ function CommentCollapse(e) {
         e.classList.remove("active");
         e.removeAttribute("comments_status");
     }
+}
+
+//将选择的标签加入到输入框
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var preTag=$("#tag").val();
+    if (preTag.indexOf(value) == -1) {
+        if (preTag) {
+            preTag = preTag + ',' + value;
+            $("#tag").val(preTag);
+        } else {
+            $("#tag").val(value);
+        }
+    }
+}
+
+//显示标签
+function displayTag() {
+    $("#tag-section").show();
 }
 
 //在Jquery里格式化Date日期时间数据
