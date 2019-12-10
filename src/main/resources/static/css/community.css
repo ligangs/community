@@ -82,6 +82,13 @@ label {
     margin-top: 10px;
 }
 
+.publish-tag-section .label{
+    white-space: inherit;
+    margin: 5px 5px;
+    display: inline-block;
+
+}
+
 .second-comment .btn-comment {
     margin:10px 0;
 }

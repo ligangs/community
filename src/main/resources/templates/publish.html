@@ -43,12 +43,12 @@
                 <!--展示标签-->
                 <div class="publish-tag-section" id="tag-section">
                     <ul class="nav nav-tabs" role="tablist" >
-                        <li role="presentation" th:each="selecetCatogory:${tags}">
+                        <li role="presentation" th:each="selecetCatogory,tagIndex:${tags}" th:classappend="${tagIndex.first ? 'active':''}">
                             <a th:href="${'#'+selecetCatogory.categoryName}"  role="tab" data-toggle="tab" th:text="${selecetCatogory.categoryName}"></a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel " class="tab-pane publish-tag" th:each="selecetCatogory:${tags}" th:id="${selecetCatogory.categoryName}">
+                        <div role="tabpanel " class="tab-pane publish-tag" th:each="selecetCatogory,tagIndex:${tags}" th:id="${selecetCatogory.categoryName}" th:classappend="${tagIndex.first ? 'active':''}">
                             <span class="label label-info question-label sp-publish" th:each="selectTag:${selecetCatogory.tags}">
                                 <span class="glyphicon glyphicon-tags"></span>
                                 <span onclick="selectTag(this)" th:data-tag="${selectTag}" th:text="${selectTag}"></span>
