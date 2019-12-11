@@ -14,45 +14,82 @@
 
 <div class="container-fluid main profile">
     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 content-left">
+
+        <!--sectName-->
         <div class="page-header">
             <h2 th:text="${sectionName}"></h2>
         </div>
-        <div class="media" th:each="questionDTO:${pageQuestionDTO.getPageQuestionDTOS()}">
-            <div class="media-left">
-                <a href="#">
-                    <img class="media-object img-rounded" th:src="${questionDTO.user.avatarUrl}">
-                </a>
-            </div>
-            <div class="media-body">
-                <a th:href="@{'/question/'+${questionDTO.id}}">
-                    <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
-                </a>
-                <span class="text-description">
+
+        <!--显示问题列表-->
+        <div class="profile-list-main" th:if="${section.equals('questions')}">
+            <div class="media" th:each="questionDTO:${paginationDTO.data}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded" th:src="${questionDTO.user.avatarUrl}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <a th:href="@{'/question/'+${questionDTO.id}}">
+                        <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
+                    </a>
+                    <span class="text-description">
                     <span th:text="${questionDTO.likeCount}"></span> 人关注 • <span
-                        th:text="${questionDTO.commentCount}"></span> 个回复 • <span
-                        th:text="${questionDTO.viewCount}"></span> 次浏览 • <span
-                        th:text="${#calendars.format(questionDTO.gmtCreate,'yyyy/MM/dd HH:mm')}"></span>
+                            th:text="${questionDTO.commentCount}"></span> 个回复 • <span
+                            th:text="${questionDTO.viewCount}"></span> 次浏览 • <span
+                            th:text="${#calendars.format(questionDTO.gmtCreate,'yyyy/MM/dd HH:mm')}"></span>
                 </span>
+                </div>
             </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${paginationDTO.currentPage -1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="page:${paginationDTO.getPages()}"
+                        th:class="${page==paginationDTO.currentPage}?'active':''">
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${page}}" th:text="${page}"></a>
+                    </li>
+                    <li>
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${paginationDTO.currentPage +1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <li>
-                    <a th:href="@{'/profile/'+${section}+'/?currentPage='+${pageQuestionDTO.currentPage -1}}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li th:each="page:${pageQuestionDTO.getPages()}"
-                    th:class="${page==pageQuestionDTO.currentPage}?'active':''">
-                    <a th:href="@{'/profile/'+${section}+'/?currentPage='+${page}}" th:text="${page}"></a>
-                </li>
-                <li>
-                    <a th:href="@{'/profile/'+${section}+'/?currentPage='+${pageQuestionDTO.currentPage +1}}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
+        <!--显示通知列表-->
+        <div class="profile-list-main" th:if="${section.equals('replies')}">
+            <p th:each="notifyDTO:${paginationDTO.data}">
+                <span th:text="${notifyDTO.notifierName}"></span>
+                <span th:text="${notifyDTO.typeName}"></span>
+                <a th:href="@{'/notification/'+ ${notifyDTO.id}}">
+                    <span th:text="${notifyDTO.outerTitle}"></span>
+                </a>
+                <span class="label label-info" th:if="${notifyDTO.status==0}">未读</span>
+            </p>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${paginationDTO.currentPage -1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="page:${paginationDTO.getPages()}"
+                        th:class="${page==paginationDTO.currentPage}?'active':''">
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${page}}" th:text="${page}"></a>
+                    </li>
+                    <li>
+                        <a th:href="@{'/profile/'+${section}+'/?currentPage='+${paginationDTO.currentPage +1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
     </div>
     <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
         <div class="list-group section">
@@ -63,7 +100,7 @@
             <a href="/profile/replies" class="list-group-item"
                th:classappend="${section.equals('replies')}?'active':''">
                 我的回复
-                <span class="badge">14</span>
+                <span class="badge" th:text="${session.unreadCount}">14</span>
             </a>
         </div>
     </div>

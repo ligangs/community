@@ -1,6 +1,6 @@
 package com.gang.community.service;
 
-import com.gang.community.dto.PageQuestionDTO;
+import com.gang.community.dto.PaginationDTO;
 import com.gang.community.dto.QuestionDTO;
 import com.gang.community.exception.CustomizeErrorCode;
 import com.gang.community.exception.CustomizeException;
@@ -45,15 +45,15 @@ public class QuestionService {
     }
 
     //组装一个pageQuestionDTO,用于首页分页显示所有提问
-    public PageQuestionDTO getPageQuestion(int currentPage, int pageSize) {
-        PageQuestionDTO pageQuestionDTO =new PageQuestionDTO();
+    public PaginationDTO getPageQuestion(int currentPage, int pageSize) {
+        PaginationDTO<QuestionDTO> paginationDTO =new PaginationDTO<>();
 
         //得到总记录数
         int totalSize= (int)questionMapper.countByExample(new QuestionExample());
         if (totalSize == 0) {
-            pageQuestionDTO.setFlag(false);
+            paginationDTO.setFlag(false);
         }
-        if (pageQuestionDTO.getFlag()){
+        if (paginationDTO.getFlag()){
             //计算总页数
             int totalPage=totalSize%pageSize==0?totalSize/pageSize:totalSize/pageSize+1;
             //处理当前页，上下页，会导致当前页为0 或大于总页数
@@ -62,7 +62,7 @@ public class QuestionService {
             if(currentPage>totalPage)
                 currentPage=totalPage;
             //设置当前页
-            pageQuestionDTO.setCurrentPage(currentPage);
+            paginationDTO.setCurrentPage(currentPage);
 
             //得到当前页需要显示的问题
             QuestionExample questionExample = new QuestionExample();
@@ -76,7 +76,7 @@ public class QuestionService {
                 questionDTO.setUser( userMapper.selectByPrimaryKey(question.getCreator()));
                 questionDTOS.add(questionDTO);
             }
-            pageQuestionDTO.setPageQuestionDTOS(questionDTOS);
+            paginationDTO.setData(questionDTOS);
 
             //计算出需要显示的页码，开始和结束
             int start;
@@ -101,16 +101,16 @@ public class QuestionService {
             for (int i = start; i <= end; i++) {
                 pages.add(i);
             }
-            pageQuestionDTO.setPages(pages);
+            paginationDTO.setPages(pages);
         }
-        return pageQuestionDTO;
+        return paginationDTO;
     }
 
     //组装用于显示个人所有提问的分页数据信息
-    public PageQuestionDTO getPageQuestionByUserId(Integer currentPage,
-                                                   Integer pageSize,
-                                                   Long userId) {
-        PageQuestionDTO pageQuestionDTO =new PageQuestionDTO();
+    public PaginationDTO getPageQuestionByUserId(Integer currentPage,
+                                                 Integer pageSize,
+                                                 Long userId) {
+        PaginationDTO<QuestionDTO> paginationDTO =new PaginationDTO<>();
 
         //得到总记录数
         QuestionExample questionExample = new QuestionExample();
@@ -118,10 +118,10 @@ public class QuestionService {
         int totalSize=(int)questionMapper.countByExample(questionExample);
         //如果有提问
         if (totalSize == 0) {
-            pageQuestionDTO.setFlag(false);
+            paginationDTO.setFlag(false);
         }
         //问题为空，才封装数据
-        if (pageQuestionDTO.getFlag()){
+        if (paginationDTO.getFlag()){
             //计算总页数
             int totalPage=totalSize%pageSize==0?totalSize/pageSize:totalSize/pageSize+1;
             //处理当前页，上下页，会导致当前页为0 或大于总页数
@@ -130,12 +130,11 @@ public class QuestionService {
             if(currentPage>totalPage)
                 currentPage=totalPage;
             //设置当前页
-            pageQuestionDTO.setCurrentPage(currentPage);
+            paginationDTO.setCurrentPage(currentPage);
 
             //得到当前页需要显示的问题
-            QuestionExample questionExample1 = new QuestionExample();
-            questionExample.createCriteria().andCreatorEqualTo(userId);
-            List<Question> pageQuestions = questionMapper.selectByExampleWithRowbounds(questionExample1,new RowBounds((currentPage-1)*pageSize,pageSize));
+            questionExample.setOrderByClause("gmt_create desc");
+            List<Question> pageQuestions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds((currentPage-1)*pageSize,pageSize));
             //组装问题和作者，便于显示
             List<QuestionDTO> questionDTOS = new ArrayList<>();
             for (Question question : pageQuestions) {
@@ -144,7 +143,7 @@ public class QuestionService {
                 questionDTO.setUser( userMapper.selectByPrimaryKey(question.getCreator()));
                 questionDTOS.add(questionDTO);
             }
-            pageQuestionDTO.setPageQuestionDTOS(questionDTOS);
+            paginationDTO.setData(questionDTOS);
 
             //计算出需要显示的页码，开始和结束
             int start;
@@ -169,9 +168,9 @@ public class QuestionService {
             for (int i = start; i <= end; i++) {
                 pages.add(i);
             }
-            pageQuestionDTO.setPages(pages);
+            paginationDTO.setPages(pages);
         }
-        return pageQuestionDTO;
+        return paginationDTO;
     }
 
     public QuestionDTO getQuestionDTOById(Long id) {

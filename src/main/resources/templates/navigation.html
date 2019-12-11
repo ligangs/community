@@ -28,6 +28,11 @@
                            th:if="${session.user==null}">登录</a>
                     </li>
                     <li>
+                        <a href="/profile/replies" th:if="${session.user!=null}">通知
+                            <span class="badge" th:text="${session.unreadCount}" th:if="${session.unreadCount}!=0">14</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="/publish" th:if="${session.user!=null}">提问</a>
                     </li>
                     <li class="dropdown">

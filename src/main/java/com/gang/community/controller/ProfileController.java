@@ -1,7 +1,9 @@
 package com.gang.community.controller;
 
-import com.gang.community.dto.PageQuestionDTO;
+import com.gang.community.dto.NotificationDTO;
+import com.gang.community.dto.PaginationDTO;
 import com.gang.community.model.User;
+import com.gang.community.service.NotificationService;
 import com.gang.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name="action")String action,
@@ -29,14 +33,15 @@ public class ProfileController {
         if(user==null){
             return "redirect:/";
         }
-        //得到对应用户的分页问题
-        PageQuestionDTO pageQuestionDTO=questionService.getPageQuestionByUserId(currentPage,pageSize,user.getId());
-        model.addAttribute("pageQuestionDTO", pageQuestionDTO);
         if ("questions".equals(action)) {
+            //得到对应用户的分页问题
+            PaginationDTO paginationDTO =questionService.getPageQuestionByUserId(currentPage,pageSize,user.getId());
+            model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("section","questions");
             model.addAttribute("sectionName", "我的提问");
-
         } else if ("replies".equals(action)) {
+            PaginationDTO paginationDTO = notificationService.list(currentPage,pageSize,user.getId());
+            model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("section","replies");
             model.addAttribute("sectionName", "我的回复");
         }

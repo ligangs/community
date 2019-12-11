@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PageQuestionDTO {
-    private List<QuestionDTO> pageQuestionDTOS;//当前页要显示的问题
+public class PaginationDTO<T> {
+    private List<T> data;//当前页要显示的问题
     private int currentPage; //当前页
     private int totalPage;//总页数
     private int pageSize;//每页的记录数
