@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.preview.css">
     <script src="/js/jquery-3.4.1.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="/js/community.js"></script>
@@ -26,7 +27,22 @@
                 浏览次数：<span th:text="${question.viewCount}"></span>
             </span>
             <hr/>
-            <h4 th:text="${question.description}"></h4>
+            <div id="markdown-view">
+                <!-- Server-side output Markdown text -->
+                <textarea style="display:none;" th:text="${question.description}">### Hello world!</textarea>
+            </div>
+            <script src="/js/editormd.js"></script>
+            <script src="/lib/marked.min.js"></script>
+            <script src="/lib/prettify.min.js"></script>
+            <script type="text/javascript">
+                $(function() {
+                    var testView = editormd.markdownToHTML("markdown-view", {
+                        // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+                         htmlDecode : true,  // Enable / disable HTML tag encode.
+                         htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+                    });
+                });
+            </script>
             <hr/>
             <span class="label label-info question-label" th:each="tag:${question.tag.split(',')}">
                 <span class="glyphicon glyphicon-tags"></span>
